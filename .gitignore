@@ -1,0 +1,22 @@
+# Virtual Environment
+.venv/
+
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+
+# SQLite
+*.db
+
+# VS Code
+.vscode/
+
+# Output
+output/
+
+# Testing
+.pytest_cache/
+
+# Logs
+*.log

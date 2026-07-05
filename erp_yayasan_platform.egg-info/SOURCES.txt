@@ -1,9 +1,0 @@
-pyproject.toml
-./app/__init__.py
-./app/main.py
-./erp/__init__.py
-erp_yayasan_platform.egg-info/PKG-INFO
-erp_yayasan_platform.egg-info/SOURCES.txt
-erp_yayasan_platform.egg-info/dependency_links.txt
-erp_yayasan_platform.egg-info/requires.txt
-erp_yayasan_platform.egg-info/top_level.txt
