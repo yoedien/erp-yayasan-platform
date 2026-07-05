@@ -1,8 +1,8 @@
 from sqlalchemy import create_engine
 
-DATABASE_URL = "sqlite:///erp_yayasan.db"
+from erp.config.settings import settings
 
 engine = create_engine(
-    DATABASE_URL,
-    echo=True,
+    settings.database_url,
+    echo=settings.debug,
 )
