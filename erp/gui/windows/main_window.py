@@ -69,15 +69,15 @@ class MainWindow(QMainWindow):
 
         self.stack = QStackedWidget()
 
-        self.dashboard_page = DashboardPage(self.user)
-        self.user_page = UserPage()
-        self.role_page = RolePage()
-        self.unit_page = UnitPage()
+        self.pages = {
+            "Dashboard": DashboardPage(self.user),
+            "User": UserPage(),
+            "Role": RolePage(),
+            "Unit": UnitPage(),
+        }
 
-        self.stack.addWidget(self.dashboard_page)
-        self.stack.addWidget(self.user_page)
-        self.stack.addWidget(self.role_page)
-        self.stack.addWidget(self.unit_page)
+        for page in self.pages.values():
+            self.stack.addWidget(page)
 
         splitter.addWidget(self.menu)
         splitter.addWidget(self.stack)
@@ -94,24 +94,7 @@ class MainWindow(QMainWindow):
 
     def change_page(self, item):
 
-        text = item.text(0)
+        page = self.pages.get(item.text(0))
 
-        if text == "Dashboard":
-            self.stack.setCurrentWidget(
-                self.dashboard_page
-            )
-
-        elif text == "User":
-            self.stack.setCurrentWidget(
-                self.user_page
-            )
-
-        elif text == "Role":
-            self.stack.setCurrentWidget(
-                self.role_page
-            )
-
-        elif text == "Unit":
-            self.stack.setCurrentWidget(
-                self.unit_page
-            )
+        if page:
+            self.stack.setCurrentWidget(page)
