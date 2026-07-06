@@ -30,8 +30,8 @@ class Permission(Base):
         nullable=True,
     )
 
-    roles = relationship(
-        "RolePermission",
-        back_populates="permission",
-        cascade="all, delete-orphan",
-    )
+    role_permissions = relationship(
+    "RolePermission",
+    back_populates="permission",
+    cascade="all, delete-orphan",
+)
