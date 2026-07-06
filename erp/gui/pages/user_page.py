@@ -1,3 +1,5 @@
+from tkinter import dialog
+
 from PySide6.QtWidgets import (
     QPushButton,
     QHBoxLayout,
@@ -8,6 +10,7 @@ from PySide6.QtWidgets import (
 
 from erp.gui.models.user_table_model import UserTableModel
 from erp.services.user_service import UserService
+from erp.gui.dialogs.user_dialog import UserDialog
 
 
 class UserPage(QWidget):
@@ -18,6 +21,8 @@ class UserPage(QWidget):
         self.service = UserService()
 
         self.model = UserTableModel()
+
+        self.selected_user = None
 
         self.build_ui()
 
@@ -52,6 +57,14 @@ class UserPage(QWidget):
             QTableView.SelectionMode.SingleSelection
         )
 
+        self.table.clicked.connect(
+            self.select_user
+        )
+
+        self.btn_add.clicked.connect(
+            self.add_user
+        )
+
         layout.addLayout(button_layout)
         layout.addWidget(self.table)
 
@@ -63,8 +76,26 @@ class UserPage(QWidget):
 
     def load_data(self):
 
-        users = self.service.get_all()
+        users = self.service.get_users()
 
         self.model.set_users(users)
 
         self.table.resizeColumnsToContents()
+
+    def select_user(self, index):
+
+        self.selected_user = self.model.users[
+            index.row()
+        ]
+
+        print(
+            self.selected_user.username
+        )
+
+    def add_user(self):
+
+        dialog = UserDialog(self)
+
+        if dialog.exec():
+
+            self.load_data()
