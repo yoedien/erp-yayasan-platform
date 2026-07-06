@@ -2,14 +2,24 @@ from sqlalchemy import select
 
 from erp.models import User
 from .base_repository import BaseRepository
+from sqlalchemy.orm import joinedload
 
 
 class UserRepository(BaseRepository):
 
     def get_all(self):
-        return self.session.scalars(
-            select(User).order_by(User.id)
-        ).all()
+        return (
+            self.session.scalars(
+                select(User)
+                .options(
+                    joinedload(User.role),
+                    joinedload(User.unit),
+                )
+                .order_by(User.id)
+            )
+            .unique()
+            .all()
+        )
 
     def get_by_username(self, username: str):
         return self.session.scalar(
