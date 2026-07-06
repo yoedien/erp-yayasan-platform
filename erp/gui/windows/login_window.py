@@ -10,7 +10,7 @@ from PySide6.QtWidgets import (
 
 from erp.controllers import LoginController
 from erp.database.session import SessionLocal
-from erp.gui.windows.dashboard_window import DashboardWindow
+from erp.gui.windows.main_window import MainWindow
 
 
 class LoginWindow(QWidget):
@@ -58,11 +58,11 @@ class LoginWindow(QWidget):
         )
 
         if success:
-            self.dashboard = DashboardWindow(
+            self.main_window = MainWindow(
                 self.controller.current_user
-            )
+        )
 
-            self.dashboard.show()
+            self.main_window.show()
 
             self.close()
 
