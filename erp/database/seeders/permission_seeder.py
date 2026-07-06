@@ -21,8 +21,21 @@ PERMISSIONS = [
     ("unit.create", "Tambah Unit", "Unit"),
     ("unit.update", "Ubah Unit", "Unit"),
     ("unit.delete", "Hapus Unit", "Unit"),
-]
 
+    # Proposal
+    ("proposal.create", "Buat Pengajuan", "Proposal"),
+    ("proposal.approve", "Setujui Pengajuan", "Proposal"),
+
+    # Payment
+    ("payment.create", "Buat Pembayaran", "Payment"),
+    ("payment.approve", "Setujui Pembayaran", "Payment"),
+
+    # Report
+    ("report.view", "Lihat Laporan", "Report"),
+
+    # Setting
+    ("setting.manage", "Kelola Pengaturan", "Setting"),
+]
 
 def seed_permissions():
     session = SessionLocal()
