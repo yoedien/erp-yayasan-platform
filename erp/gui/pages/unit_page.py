@@ -1,21 +1,15 @@
-from PySide6.QtWidgets import (
-    QMessageBox,
-    QPushButton,
-    QHBoxLayout,
-    QTableView,
-    QVBoxLayout,
-    QWidget,
-)
+from PySide6.QtWidgets import QMessageBox
 
-from erp.gui.models.unit_table_model import UnitTableModel
+from erp.gui.base import BaseMasterPage
 from erp.gui.dialogs.unit_dialog import UnitDialog
+from erp.gui.models.unit_table_model import UnitTableModel
 from erp.services.unit_service import UnitService
 
 
-class UnitPage(QWidget):
+class UnitPage(BaseMasterPage):
 
     def __init__(self):
-        super().__init__()
+        super().__init__("Master Unit")
 
         self.service = UnitService()
 
@@ -23,64 +17,29 @@ class UnitPage(QWidget):
 
         self.selected_unit = None
 
-        self.build_ui()
-
-        self.load_data()
-
-    def build_ui(self):
-
-        layout = QVBoxLayout()
-
-        button_layout = QHBoxLayout()
-
-        self.btn_add = QPushButton("Tambah")
-        self.btn_edit = QPushButton("Ubah")
-        self.btn_delete = QPushButton("Hapus")
-        self.btn_refresh = QPushButton("Refresh")
-
-        button_layout.addWidget(self.btn_add)
-        button_layout.addWidget(self.btn_edit)
-        button_layout.addWidget(self.btn_delete)
-        button_layout.addWidget(self.btn_refresh)
-        button_layout.addStretch()
-
-        self.table = QTableView()
-
         self.table.setModel(self.model)
-
-        self.table.setSelectionBehavior(
-            QTableView.SelectionBehavior.SelectRows
-        )
-
-        self.table.setSelectionMode(
-            QTableView.SelectionMode.SingleSelection
-        )
 
         self.table.clicked.connect(
             self.select_unit
         )
 
-        self.btn_add.clicked.connect(
+        self.toolbar.add_clicked.connect(
             self.add_unit
         )
 
-        self.btn_edit.clicked.connect(
+        self.toolbar.edit_clicked.connect(
             self.edit_unit
         )
 
-        self.btn_delete.clicked.connect(
+        self.toolbar.delete_clicked.connect(
             self.delete_unit
         )
 
-        self.btn_refresh.clicked.connect(
+        self.toolbar.refresh_clicked.connect(
             self.load_data
         )
 
-        layout.addLayout(button_layout)
-
-        layout.addWidget(self.table)
-
-        self.setLayout(layout)
+        self.load_data()
 
     def load_data(self):
 
