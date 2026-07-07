@@ -13,6 +13,7 @@ from erp.gui.pages.user_page import UserPage
 from erp.gui.pages.role_page import RolePage
 from erp.gui.pages.unit_page import UnitPage
 from erp.gui.pages.partner_page import PartnerPage
+from erp.gui.pages.permission_page import PermissionPage
 
 class MainWindow(QMainWindow):
 
@@ -72,11 +73,13 @@ class MainWindow(QMainWindow):
         self.stack = QStackedWidget()
 
         self.pages = {
-            "Dashboard": DashboardPage(self.user),
+            "Dashboard":
+        DashboardPage(self.user),
             "User": UserPage(),
             "Role": RolePage(),
             "Unit": UnitPage(),
             "Partner": PartnerPage(),
+            "Permission": PermissionPage(),
         }
 
         for page in self.pages.values():
