@@ -1,18 +1,24 @@
 from typing import TYPE_CHECKING
 
 from sqlalchemy import String
-from sqlalchemy.orm import Mapped, mapped_column, relationship
+from sqlalchemy.orm import Mapped
+from sqlalchemy.orm import mapped_column
+from sqlalchemy.orm import relationship
 
 from erp.database.base import Base
 
 if TYPE_CHECKING:
     from erp.models.user import User
+    from erp.models.role_permission import RolePermission
 
 
 class Role(Base):
+
     __tablename__ = "roles"
 
-    id: Mapped[int] = mapped_column(primary_key=True)
+    id: Mapped[int] = mapped_column(
+        primary_key=True
+    )
 
     name: Mapped[str] = mapped_column(
         String(100),
@@ -21,10 +27,12 @@ class Role(Base):
     )
 
     users: Mapped[list["User"]] = relationship(
-        back_populates="role"
+        "User",
+        back_populates="role",
     )
-    role_permissions = relationship(
-    "RolePermission",
-    back_populates="role",
-    cascade="all, delete-orphan",
-)
+
+    role_permissions: Mapped[list["RolePermission"]] = relationship(
+        "RolePermission",
+        back_populates="role",
+        cascade="all, delete-orphan",
+    )

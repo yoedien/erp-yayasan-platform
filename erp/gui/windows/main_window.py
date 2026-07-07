@@ -12,6 +12,7 @@ from erp.gui.pages.dashboard_page import DashboardPage
 from erp.gui.pages.user_page import UserPage
 from erp.gui.pages.role_page import RolePage
 from erp.gui.pages.unit_page import UnitPage
+from erp.gui.pages.partner_page import PartnerPage
 
 class MainWindow(QMainWindow):
 
@@ -44,6 +45,7 @@ class MainWindow(QMainWindow):
         QTreeWidgetItem(master, ["User"])
         QTreeWidgetItem(master, ["Role"])
         QTreeWidgetItem(master, ["Unit"])
+        QTreeWidgetItem(master, ["Partner"])
         QTreeWidgetItem(master, ["Permission"])
 
         keuangan = QTreeWidgetItem(["Keuangan"])
@@ -74,6 +76,7 @@ class MainWindow(QMainWindow):
             "User": UserPage(),
             "Role": RolePage(),
             "Unit": UnitPage(),
+            "Partner": PartnerPage(),
         }
 
         for page in self.pages.values():

@@ -4,7 +4,6 @@ from PySide6.QtWidgets import (
     QDialog,
     QFormLayout,
     QHBoxLayout,
-    QLabel,
     QLineEdit,
     QMessageBox,
     QPushButton,
@@ -13,6 +12,7 @@ from PySide6.QtWidgets import (
 )
 
 from erp.core.enums import PartnerType
+from erp.services.partner_service import PartnerService
 
 
 class PartnerDialog(QDialog):
@@ -21,15 +21,19 @@ class PartnerDialog(QDialog):
         super().__init__(parent)
 
         self.partner = partner
+        self.service = PartnerService()
 
         self.setWindowTitle("Partner")
-
-        self.resize(500, 500)
+        self.resize(500, 550)
 
         self.build_ui()
 
         if self.partner:
             self.load_data()
+        else:
+            self.code.setText(
+                self.service.generate_code()
+            )
 
     def build_ui(self):
 
@@ -68,7 +72,7 @@ class PartnerDialog(QDialog):
         form.addRow("Nama", self.name)
         form.addRow("Jenis", self.partner_type)
         form.addRow("PIC", self.pic)
-        form.addRow("No HP", self.phone)
+        form.addRow("No. HP", self.phone)
         form.addRow("Email", self.email)
         form.addRow("Kota", self.city)
         form.addRow("NPWP", self.npwp)
@@ -90,8 +94,8 @@ class PartnerDialog(QDialog):
 
         self.setLayout(layout)
 
-        self.btn_cancel.clicked.connect(self.reject)
         self.btn_save.clicked.connect(self.save)
+        self.btn_cancel.clicked.connect(self.reject)
 
     def load_data(self):
 
@@ -105,21 +109,77 @@ class PartnerDialog(QDialog):
         if index >= 0:
             self.partner_type.setCurrentIndex(index)
 
-        self.pic.setText(self.partner.pic)
-        self.phone.setText(self.partner.phone)
-        self.email.setText(self.partner.email)
-        self.city.setText(self.partner.city)
-        self.npwp.setText(self.partner.npwp)
-        self.address.setPlainText(self.partner.address)
-        self.notes.setPlainText(self.partner.notes)
+        self.pic.setText(self.partner.pic or "")
+        self.phone.setText(self.partner.phone or "")
+        self.email.setText(self.partner.email or "")
+        self.city.setText(self.partner.city or "")
+        self.npwp.setText(self.partner.npwp or "")
+        self.address.setPlainText(self.partner.address or "")
+        self.notes.setPlainText(self.partner.notes or "")
+
         self.is_active.setChecked(
             self.partner.is_active
         )
 
     def save(self):
 
-        QMessageBox.information(
-            self,
-            "Informasi",
-            "Logika simpan akan kita hubungkan pada langkah berikutnya.",
-        )
+        if not self.name.text().strip():
+
+            QMessageBox.warning(
+                self,
+                "Validasi",
+                "Nama Partner wajib diisi.",
+            )
+
+            return
+
+        data = {
+
+            "code": self.code.text(),
+
+            "name": self.name.text().strip(),
+
+            "partner_type": self.partner_type.currentText(),
+
+            "pic": self.pic.text().strip(),
+
+            "phone": self.phone.text().strip(),
+
+            "email": self.email.text().strip(),
+
+            "city": self.city.text().strip(),
+
+            "npwp": self.npwp.text().strip(),
+
+            "address": self.address.toPlainText().strip(),
+
+            "notes": self.notes.toPlainText().strip(),
+
+            "is_active": self.is_active.isChecked(),
+
+        }
+
+        try:
+
+            if self.partner:
+
+                self.service.update_partner(
+                    self.partner.id,
+                    **data,
+                )
+
+            else:
+
+                self.service.create_partner(
+                    **data,
+                )
+
+            self.accept()
+
+        except Exception as e:
+
+            QMessageBox.critical(
+                self,
+                "Error",
+                str(e),
+            )

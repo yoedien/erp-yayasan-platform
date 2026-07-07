@@ -4,20 +4,26 @@ from erp.database.session import SessionLocal
 from erp.models.role import Role
 
 
-ROLES = [
+DEFAULT_ROLES = [
     "Super Admin",
     "Ketua Yayasan",
-    "Bendahara",
+    "Bendahara Yayasan",
+    "Lajnah Pendidikan",
     "Kepala Sekolah",
-    "Operator",
+    "Guru",
+    "Staff TU",
+    "Kasir",
+    "Humas",
 ]
 
 
 def seed_roles():
+
     session = SessionLocal()
 
     try:
-        for role_name in ROLES:
+
+        for role_name in DEFAULT_ROLES:
 
             exists = session.scalar(
                 select(Role).where(
@@ -30,11 +36,14 @@ def seed_roles():
 
             session.add(
                 Role(
-                    name=role_name,
+                    name=role_name
                 )
             )
 
         session.commit()
 
+        print("Role Seeder selesai.")
+
     finally:
+
         session.close()
