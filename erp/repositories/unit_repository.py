@@ -11,6 +11,13 @@ class UnitRepository(BaseRepository):
             select(Unit).order_by(Unit.id)
         ).all()
 
+    def get_by_id(self, unit_id: int):
+        return self.session.scalar(
+            select(Unit).where(
+                Unit.id == unit_id
+            )
+        )
+
     def get_by_code(self, code: str):
         return self.session.scalar(
             select(Unit).where(
@@ -23,6 +30,7 @@ class UnitRepository(BaseRepository):
         code: str,
         name: str,
     ):
+
         unit = Unit(
             code=code,
             name=name,
@@ -33,3 +41,23 @@ class UnitRepository(BaseRepository):
         self.session.refresh(unit)
 
         return unit
+
+    def update(
+        self,
+        unit,
+        code: str,
+        name: str,
+    ):
+
+        unit.code = code
+        unit.name = name
+
+        self.session.commit()
+        self.session.refresh(unit)
+
+        return unit
+
+    def delete(self, unit):
+
+        self.session.delete(unit)
+        self.session.commit()

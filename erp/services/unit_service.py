@@ -10,7 +10,6 @@ class UnitService:
 
         try:
             repo = UnitRepository(session)
-
             return repo.get_all()
 
         finally:
@@ -36,9 +35,68 @@ class UnitService:
                 )
 
             return repo.create(
-                code,
-                name,
+                code=code,
+                name=name,
             )
+
+        finally:
+            session.close()
+
+    def update_unit(
+        self,
+        unit_id: int,
+        code: str,
+        name: str,
+    ):
+
+        session = SessionLocal()
+
+        try:
+
+            repo = UnitRepository(session)
+
+            unit = repo.get_by_id(unit_id)
+
+            if not unit:
+                raise ValueError(
+                    "Unit tidak ditemukan."
+                )
+
+            existing = repo.get_by_code(code)
+
+            if existing and existing.id != unit.id:
+                raise ValueError(
+                    f"Unit '{code}' sudah ada."
+                )
+
+            return repo.update(
+                unit=unit,
+                code=code,
+                name=name,
+            )
+
+        finally:
+            session.close()
+
+    def delete_unit(
+        self,
+        unit_id: int,
+    ):
+
+        session = SessionLocal()
+
+        try:
+
+            repo = UnitRepository(session)
+
+            unit = repo.get_by_id(unit_id)
+
+            if not unit:
+                raise ValueError(
+                    "Unit tidak ditemukan."
+                )
+
+            repo.delete(unit)
 
         finally:
             session.close()
