@@ -1,6 +1,5 @@
-from tkinter import dialog
-
 from PySide6.QtWidgets import (
+    QMessageBox,
     QPushButton,
     QHBoxLayout,
     QTableView,
@@ -9,8 +8,8 @@ from PySide6.QtWidgets import (
 )
 
 from erp.gui.models.user_table_model import UserTableModel
-from erp.services.user_service import UserService
 from erp.gui.dialogs.user_dialog import UserDialog
+from erp.services.user_service import UserService
 
 
 class UserPage(QWidget):
@@ -57,22 +56,17 @@ class UserPage(QWidget):
             QTableView.SelectionMode.SingleSelection
         )
 
-        self.table.clicked.connect(
-            self.select_user
-        )
+        self.table.clicked.connect(self.select_user)
 
-        self.btn_add.clicked.connect(
-            self.add_user
-        )
+        self.btn_add.clicked.connect(self.add_user)
+        self.btn_edit.clicked.connect(self.edit_user)
+        self.btn_delete.clicked.connect(self.delete_user)
+        self.btn_refresh.clicked.connect(self.load_data)
 
         layout.addLayout(button_layout)
         layout.addWidget(self.table)
 
         self.setLayout(layout)
-
-        self.btn_refresh.clicked.connect(
-            self.load_data
-        )
 
     def load_data(self):
 
@@ -82,20 +76,78 @@ class UserPage(QWidget):
 
         self.table.resizeColumnsToContents()
 
+        self.selected_user = None
+
     def select_user(self, index):
 
-        self.selected_user = self.model.users[
-            index.row()
-        ]
-
-        print(
-            self.selected_user.username
-        )
+        self.selected_user = self.model.users[index.row()]
 
     def add_user(self):
 
         dialog = UserDialog(self)
 
         if dialog.exec():
+            self.load_data()
+
+    def edit_user(self):
+
+        if not self.selected_user:
+
+            QMessageBox.information(
+                self,
+                "Informasi",
+                "Silakan pilih user yang akan diubah.",
+            )
+
+            return
+
+        dialog = UserDialog(
+            self,
+            user=self.selected_user,
+        )
+
+        if dialog.exec():
+            self.load_data()
+
+    def delete_user(self):
+
+        if not self.selected_user:
+
+            QMessageBox.information(
+                self,
+                "Informasi",
+                "Silakan pilih user yang akan dihapus.",
+            )
+            return
+
+        jawab = QMessageBox.question(
+            self,
+            "Konfirmasi",
+            f"Apakah Anda yakin ingin menghapus user '{self.selected_user.username}'?",
+            QMessageBox.Yes | QMessageBox.No,
+        )
+
+        if jawab != QMessageBox.Yes:
+            return
+
+        try:
+
+            self.service.delete_user(
+                self.selected_user.id
+            )
+
+            QMessageBox.information(
+                self,
+                "Berhasil",
+                "User berhasil dihapus.",
+            )
 
             self.load_data()
+
+        except Exception as e:
+
+            QMessageBox.critical(
+                self,
+                "Error",
+                str(e),
+            )
