@@ -1,0 +1,1 @@
+from .partner_type import PartnerType
