@@ -14,6 +14,12 @@ from erp.gui.pages.role_page import RolePage
 from erp.gui.pages.unit_page import UnitPage
 from erp.gui.pages.partner_page import PartnerPage
 from erp.gui.pages.permission_page import PermissionPage
+from erp.gui.pages.role_permission_page import (
+    RolePermissionPage
+)
+from erp.gui.pages.category_page import (
+    CategoryPage,
+)
 
 class MainWindow(QMainWindow):
 
@@ -43,11 +49,12 @@ class MainWindow(QMainWindow):
         dashboard = QTreeWidgetItem(["Dashboard"])
 
         master = QTreeWidgetItem(["Master Data"])
-        QTreeWidgetItem(master, ["User"])
         QTreeWidgetItem(master, ["Role"])
+        QTreeWidgetItem(master, ["Role Permission"])
         QTreeWidgetItem(master, ["Unit"])
         QTreeWidgetItem(master, ["Partner"])
         QTreeWidgetItem(master, ["Permission"])
+        QTreeWidgetItem(master, ["Kategori Belanja"])
 
         keuangan = QTreeWidgetItem(["Keuangan"])
         QTreeWidgetItem(keuangan, ["Pengajuan Belanja"])
@@ -80,6 +87,8 @@ class MainWindow(QMainWindow):
             "Unit": UnitPage(),
             "Partner": PartnerPage(),
             "Permission": PermissionPage(),
+            "Role Permission": RolePermissionPage(),
+            "Kategori Belanja": CategoryPage(),
         }
 
         for page in self.pages.values():

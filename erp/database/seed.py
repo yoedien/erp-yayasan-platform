@@ -1,30 +1,50 @@
-from erp.database.seeders.permission_seeder import seed_permissions
-from erp.database.seeders.role_seeder import seed_roles
-from erp.database.seeders.unit_seeder import seed_units
-from erp.database.seeders.user_seeder import seed_super_admin
+from erp.database.seeders.role_seeder import (
+    seed_roles,
+)
+from erp.database.seeders.unit_seeder import (
+    seed_units,
+)
+from erp.database.seeders.permission_seeder import (
+    seed_permissions,
+)
+from erp.database.seeders.user_seeder import (
+    seed_super_admin,
+)
 from erp.database.seeders.role_permission_seeder import (
     seed_role_permissions,
+)
+from erp.database.seeders.category_seeder import (
+    seed_categories,
 )
 
 
 def main():
 
-    print("Seeding Roles...")
+    print("=" * 50)
+    print("ERP Yayasan Database Seeder")
+    print("=" * 50)
+
+    print("\nSeeding Roles...")
     seed_roles()
 
-    print("Seeding Units...")
+    print("\nSeeding Units...")
     seed_units()
 
-    print("Seeding Permissions...")
+    print("\nSeeding Categories...")
+    seed_categories()
+
+    print("\nSeeding Permissions...")
     seed_permissions()
 
-    print("Seeding Super Admin...")
+    print("\nSeeding Super Admin...")
     seed_super_admin()
 
-    print("Seeding Role Permissions...")
+    print("\nSeeding Role Permissions...")
     seed_role_permissions()
 
-    print("Done.")
+    print("\n" + "=" * 50)
+    print("Semua Seeder berhasil dijalankan.")
+    print("=" * 50)
 
 
 if __name__ == "__main__":

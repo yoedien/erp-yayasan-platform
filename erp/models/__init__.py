@@ -4,6 +4,7 @@ from .user import User
 from .permission import Permission
 from .role_permission import RolePermission
 from .partner import Partner
+from .category import Category
 
 __all__ = [
     "Role",
