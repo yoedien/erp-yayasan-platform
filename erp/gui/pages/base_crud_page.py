@@ -19,21 +19,19 @@ class BaseCrudPage(QWidget):
 
         self.build_ui()
 
+        self.connect_signal()
+
+    # ======================================================
+    # UI
+    # ======================================================
+
     def build_ui(self):
 
         layout = QVBoxLayout(self)
 
-        # ==========================
-        # Title
-        # ==========================
+        title = QLabel(f"<h2>{self.title}</h2>")
 
-        lbl = QLabel(f"<h2>{self.title}</h2>")
-
-        layout.addWidget(lbl)
-
-        # ==========================
-        # Toolbar
-        # ==========================
+        layout.addWidget(title)
 
         toolbar = QHBoxLayout()
 
@@ -63,10 +61,6 @@ class BaseCrudPage(QWidget):
 
         layout.addLayout(toolbar)
 
-        # ==========================
-        # Table
-        # ==========================
-
         self.table = QTableWidget()
 
         self.table.setSortingEnabled(True)
@@ -78,3 +72,47 @@ class BaseCrudPage(QWidget):
         )
 
         layout.addWidget(self.table)
+
+    # ======================================================
+    # SIGNAL
+    # ======================================================
+
+    def connect_signal(self):
+
+        self.btn_refresh.clicked.connect(self.load_data)
+
+        self.txt_search.textChanged.connect(self.search)
+
+    # ======================================================
+    # VIRTUAL METHOD
+    # ======================================================
+
+    def load_data(self):
+        """
+        Override pada class turunan.
+        """
+        pass
+
+    def search(self):
+        """
+        Override pada class turunan.
+        """
+        pass
+
+    def open_add_dialog(self):
+        """
+        Override pada class turunan.
+        """
+        pass
+
+    def open_edit_dialog(self):
+        """
+        Override pada class turunan.
+        """
+        pass
+
+    def delete_data(self):
+        """
+        Override pada class turunan.
+        """
+        pass
