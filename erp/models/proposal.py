@@ -91,3 +91,18 @@ class Proposal(Base):
         back_populates="proposal",
         cascade="all, delete-orphan",
     )
+
+    academic_year_id = Column(
+        Integer,
+        ForeignKey("academic_years.id"),
+    )
+
+    fund_source_id = Column(
+        Integer,
+        ForeignKey("fund_sources.id"),
+    )
+
+    fund_position_id = Column(
+        Integer,
+        ForeignKey("fund_positions.id"),
+    )

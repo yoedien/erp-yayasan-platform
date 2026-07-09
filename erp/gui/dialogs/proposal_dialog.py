@@ -154,7 +154,7 @@ class ProposalDialog(QDialog):
         layout.addLayout(buttons)
 
         self.btn_cancel.clicked.connect(self.reject)
-
+            
     def load_master_data(self):
 
         self.cmb_unit.clear()
@@ -182,40 +182,6 @@ class ProposalDialog(QDialog):
             )
 
         self.cmb_category.clear()
-
-        for category in self.category_repo.get_all():
-            self.cmb_category.addItem(
-                category.name,
-                category.id,
-            )
-            
-    def load_master_data(self):
-
-        self.cmb_unit.clear()
-
-        for unit in self.unit_repo.get_all():
-            self.cmb_unit.addItem(
-                unit.name,
-                unit.id,
-            )
-
-        self.cmb_requester.clear()
-
-        for user in self.user_repo.get_all():
-            self.cmb_requester.addItem(
-                user.full_name,
-                user.id,
-            )
-
-            self.cmb_partner.clear()
-
-        for partner in self.partner_repo.get_all():
-            self.cmb_partner.addItem(
-                partner.name,
-                partner.id,
-            )
-
-            self.cmb_category.clear()
 
         for category in self.category_repo.get_all():
             self.cmb_category.addItem(
