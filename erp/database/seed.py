@@ -16,7 +16,9 @@ from erp.database.seeders.role_permission_seeder import (
 from erp.database.seeders.category_seeder import (
     seed_categories,
 )
-
+from erp.database.seeders.partner_seeder import (
+    seed as seed_partners,
+)
 
 def main():
 

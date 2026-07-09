@@ -5,41 +5,107 @@ from erp.database.session import SessionLocal
 from erp.models import Role, Unit
 from erp.repositories.user_repository import UserRepository
 
+USERS = [
+    {
+        "username": "admin",
+        "password": "admin123",
+        "full_name": "Super Administrator",
+        "role": "Super Admin",
+        "unit": "YYS",
+    },
+    {
+        "username": "ketua",
+        "password": "123456",
+        "full_name": "Ketua Yayasan",
+        "role": "Ketua Yayasan",
+        "unit": "YYS",
+    },
+    {
+        "username": "bendahara",
+        "password": "123456",
+        "full_name": "Bendahara Yayasan",
+        "role": "Bendahara Yayasan",
+        "unit": "YYS",
+    },
+    {
+        "username": "lajnah",
+        "password": "123456",
+        "full_name": "Lajnah Pendidikan",
+        "role": "Lajnah Pendidikan",
+        "unit": "YYS",
+    },
+    {
+        "username": "kepalasd",
+        "password": "123456",
+        "full_name": "Kepala SD",
+        "role": "Kepala Sekolah",
+        "unit": "SD",
+    },
+    {
+        "username": "kepalatk",
+        "password": "123456",
+        "full_name": "Kepala TK",
+        "role": "Kepala Sekolah",
+        "unit": "TK",
+    },
+    {
+        "username": "guru_sd",
+        "password": "123456",
+        "full_name": "Guru SD",
+        "role": "Guru",
+        "unit": "SD",
+    },
+    {
+        "username": "guru_tk",
+        "password": "123456",
+        "full_name": "Guru TK",
+        "role": "Guru",
+        "unit": "TK",
+    },
+]
 
-def seed_super_admin():
+
+def seed_users():
+
     session = SessionLocal()
 
     try:
-        user_repo = UserRepository(session)
 
-        # Cek apakah admin sudah ada
-        if user_repo.get_by_username("admin"):
-            print("Super Admin already exists.")
-            return
+        repo = UserRepository(session)
 
-        role = session.scalar(
-            select(Role).where(Role.name == "Super Admin")
-        )
+        for data in USERS:
 
-        unit = session.scalar(
-            select(Unit).where(Unit.code == "YYS")
-        )
+            if repo.get_by_username(data["username"]):
+                continue
 
-        if role is None:
-            raise ValueError("Role 'Super Admin' tidak ditemukan.")
+            role = session.scalar(select(Role).where(Role.name == data["role"]))
 
-        if unit is None:
-            raise ValueError("Unit 'YYS' tidak ditemukan.")
+            unit = session.scalar(select(Unit).where(Unit.code == data["unit"]))
 
-        user_repo.create(
-            username="admin",
-            password_hash=hash_password("admin123"),
-            full_name="Super Administrator",
-            role_id=role.id,
-            unit_id=unit.id,
-        )
+            if role is None:
+                print(f"Role {data['role']} tidak ditemukan.")
+                continue
 
-        print("Super Admin created.")
+            if unit is None:
+                print(f"Unit {data['unit']} tidak ditemukan.")
+                continue
+
+            repo.create(
+                username=data["username"],
+                password_hash=hash_password(data["password"]),
+                full_name=data["full_name"],
+                role_id=role.id,
+                unit_id=unit.id,
+            )
+
+        session.commit()
+
+        print("User Seeder selesai.")
 
     finally:
+
         session.close()
+
+
+if __name__ == "__main__":
+    seed_users()

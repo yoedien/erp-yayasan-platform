@@ -1,6 +1,9 @@
 from sqlalchemy import select
 
-from erp.models import Permission, RolePermission
+from erp.models import (
+    Permission,
+    RolePermission,
+)
 
 
 class AuthorizationService:
@@ -13,6 +16,9 @@ class AuthorizationService:
         role_id: int,
         permission_code: str,
     ) -> bool:
+        """
+        Mengecek apakah suatu role memiliki permission tertentu.
+        """
 
         stmt = (
             select(RolePermission)
@@ -24,3 +30,20 @@ class AuthorizationService:
         )
 
         return self.session.scalar(stmt) is not None
+
+    def get_permissions(
+        self,
+        role_id: int,
+    ) -> set[str]:
+        """
+        Mengambil seluruh permission milik suatu role.
+        Hasil dikembalikan dalam bentuk set agar pencarian cepat.
+        """
+
+        stmt = (
+            select(Permission.code)
+            .join(RolePermission)
+            .where(RolePermission.role_id == role_id)
+        )
+
+        return set(self.session.scalars(stmt).all())

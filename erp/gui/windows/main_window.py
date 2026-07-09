@@ -8,18 +8,19 @@ from PySide6.QtWidgets import (
     QTreeWidgetItem,
 )
 
+from erp.database.session import SessionLocal
+from erp.services.authorization_service import AuthorizationService
+from erp.core.permission import Permission
+
 from erp.gui.pages.dashboard_page import DashboardPage
 from erp.gui.pages.user_page import UserPage
 from erp.gui.pages.role_page import RolePage
 from erp.gui.pages.unit_page import UnitPage
 from erp.gui.pages.partner_page import PartnerPage
 from erp.gui.pages.permission_page import PermissionPage
-from erp.gui.pages.role_permission_page import (
-    RolePermissionPage
-)
-from erp.gui.pages.category_page import (
-    CategoryPage,
-)
+from erp.gui.pages.role_permission_page import RolePermissionPage
+from erp.gui.pages.category_page import CategoryPage
+from erp.gui.pages.proposal_page import ProposalPage
 
 class MainWindow(QMainWindow):
 
@@ -28,67 +29,136 @@ class MainWindow(QMainWindow):
 
         self.user = user
 
+        self.session = SessionLocal()
+
+        self.auth = AuthorizationService(
+            self.session
+        )
+
+        self.permissions = self.auth.get_permissions(
+            self.user.role_id
+        )
+
         self.setWindowTitle("ERP Yayasan")
         self.resize(1200, 700)
 
         self.build_ui()
-        self.menu.itemClicked.connect(self.change_page)
+
+        self.menu.itemClicked.connect(
+            self.change_page
+        )
 
     def build_ui(self):
 
         splitter = QSplitter(Qt.Horizontal)
 
-        # ==========================
-        # Sidebar
-        # ==========================
-
         self.menu = QTreeWidget()
-
         self.menu.setHeaderHidden(True)
 
-        dashboard = QTreeWidgetItem(["Dashboard"])
+        dashboard = QTreeWidgetItem(
+            ["Dashboard"]
+        )
 
-        master = QTreeWidgetItem(["Master Data"])
-        QTreeWidgetItem(master, ["Role"])
-        QTreeWidgetItem(master, ["Role Permission"])
-        QTreeWidgetItem(master, ["Unit"])
-        QTreeWidgetItem(master, ["Partner"])
-        QTreeWidgetItem(master, ["Permission"])
-        QTreeWidgetItem(master, ["Kategori Belanja"])
+        master = QTreeWidgetItem(
+            ["Master Data"]
+        )
 
-        keuangan = QTreeWidgetItem(["Keuangan"])
-        QTreeWidgetItem(keuangan, ["Pengajuan Belanja"])
-        QTreeWidgetItem(keuangan, ["Approval"])
-        QTreeWidgetItem(keuangan, ["Pembayaran"])
+        self.menu_user = QTreeWidgetItem(
+            master,
+            ["User"],
+        )
 
-        laporan = QTreeWidgetItem(["Laporan"])
+        self.menu_role = QTreeWidgetItem(
+            master,
+            ["Role"],
+        )
 
-        pengaturan = QTreeWidgetItem(["Pengaturan"])
+        self.menu_role_permission = QTreeWidgetItem(
+            master,
+            ["Role Permission"],
+        )
 
-        self.menu.addTopLevelItem(dashboard)
-        self.menu.addTopLevelItem(master)
-        self.menu.addTopLevelItem(keuangan)
-        self.menu.addTopLevelItem(laporan)
-        self.menu.addTopLevelItem(pengaturan)
+        self.menu_unit = QTreeWidgetItem(
+            master,
+            ["Unit"],
+        )
+
+        self.menu_partner = QTreeWidgetItem(
+            master,
+            ["Partner"],
+        )
+
+        self.menu_permission = QTreeWidgetItem(
+            master,
+            ["Permission"],
+        )
+
+        self.menu_category = QTreeWidgetItem(
+            master,
+            ["Kategori Belanja"],
+        )
+
+        keuangan = QTreeWidgetItem(
+            ["Keuangan"]
+        )
+
+        self.menu_proposal = QTreeWidgetItem(
+            keuangan,
+            ["Pengajuan Belanja"],
+        )
+
+        self.menu_approval = QTreeWidgetItem(
+            keuangan,
+            ["Approval"],
+        )
+
+        self.menu_payment = QTreeWidgetItem(
+            keuangan,
+            ["Pembayaran"],
+        )
+
+        laporan = QTreeWidgetItem(
+            ["Laporan"]
+        )
+
+        pengaturan = QTreeWidgetItem(
+            ["Pengaturan"]
+        )
+
+        self.menu.addTopLevelItem(
+            dashboard
+        )
+
+        self.menu.addTopLevelItem(
+            master
+        )
+
+        self.menu.addTopLevelItem(
+            keuangan
+        )
+
+        self.menu.addTopLevelItem(
+            laporan
+        )
+
+        self.menu.addTopLevelItem(
+            pengaturan
+        )
 
         self.menu.expandAll()
-
-        # ==========================
-        # Content
-        # ==========================
 
         self.stack = QStackedWidget()
 
         self.pages = {
-            "Dashboard":
-        DashboardPage(self.user),
+            "Dashboard": DashboardPage(self.user),
             "User": UserPage(),
             "Role": RolePage(),
+            "Role Permission": RolePermissionPage(),
             "Unit": UnitPage(),
             "Partner": PartnerPage(),
             "Permission": PermissionPage(),
-            "Role Permission": RolePermissionPage(),
             "Kategori Belanja": CategoryPage(),
+            "Pengajuan Belanja": ProposalPage(),
         }
 
         for page in self.pages.values():
@@ -104,12 +174,80 @@ class MainWindow(QMainWindow):
 
         status = QStatusBar()
         status.showMessage("Ready")
-
         self.setStatusBar(status)
 
-    def change_page(self, item):
+        self.apply_permissions()
 
-        page = self.pages.get(item.text(0))
+    def can(
+        self,
+        permission: str,
+    ) -> bool:
+
+        return permission in self.permissions
+
+    def apply_permissions(self):
+
+        self.menu_user.setHidden(
+            not self.can(
+                Permission.USER_VIEW
+            )
+        )
+
+        self.menu_role.setHidden(
+            not self.can(
+                Permission.ROLE_VIEW
+            )
+        )
+
+        self.menu_role_permission.setHidden(
+            not self.can(
+                Permission.ROLE_VIEW
+            )
+        )
+
+        self.menu_unit.setHidden(
+            not self.can(
+                Permission.UNIT_VIEW
+            )
+        )
+
+        self.menu_partner.setHidden(
+            not self.can(
+                Permission.PARTNER_VIEW
+            )
+        )
+
+        self.menu_permission.setHidden(
+            not self.can(
+                Permission.SETTING_MANAGE
+            )
+        )
+
+        self.menu_category.setHidden(
+            not self.can(
+                Permission.SETTING_MANAGE
+            )
+        )
+
+    def change_page(
+        self,
+        item,
+    ):
+
+        page = self.pages.get(
+            item.text(0)
+        )
 
         if page:
-            self.stack.setCurrentWidget(page)
+            self.stack.setCurrentWidget(
+                page
+            )
+
+    def closeEvent(
+        self,
+        event,
+    ):
+
+        self.session.close()
+
+        super().closeEvent(event)
