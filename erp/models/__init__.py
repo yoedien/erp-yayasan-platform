@@ -7,6 +7,9 @@ from .partner import Partner
 from .category import Category
 from .proposal import Proposal
 from .proposal_item import ProposalItem
+from .academic_year import AcademicYear
+from .fund_source import FundSource
+from .fund_position import FundPosition
 
 __all__ = [
     "Role",
@@ -18,4 +21,7 @@ __all__ = [
     "Category",
     "Proposal",
     "ProposalItem",
+    "AcademicYear",
+    "FundSource",
+    "FundPosition",
 ]

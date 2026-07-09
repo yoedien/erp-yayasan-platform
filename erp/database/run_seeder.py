@@ -8,7 +8,9 @@ from erp.database.seeders.user_seeder import seed_users
 from erp.database.seeders.role_permission_seeder import seed_role_permissions
 
 from erp.database.seeders.partner_seeder import seed as seed_partners
-
+from erp.database.seeders.academic_year_seeder import (
+    seed_academic_years,
+)
 
 def main():
 
@@ -25,6 +27,14 @@ def main():
 
         print("Seed Unit...")
         seed_units()
+
+        print("\nSeeding Academic Years...")
+        session = SessionLocal()
+
+        try:
+            seed_academic_years(session)
+        finally:
+            session.close()
 
         print("Seed Category...")
         seed_categories()
