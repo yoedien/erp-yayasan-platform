@@ -6,49 +6,85 @@ from erp.models import Permission, Role, RolePermission
 
 ROLE_PERMISSIONS = {
     "Super Admin": [
-    "user.view",
-    "user.create",
-    "user.update",
-    "user.delete",
-
-    "role.view",
-    "role.create",
-    "role.update",
-    "role.delete",
-
-    "unit.view",
-    "unit.create",
-    "unit.update",
-    "unit.delete",
-
-    "proposal.create",
-    "proposal.approve",
-
-    "payment.create",
-    "payment.approve",
-
-    "report.view",
-
-    "setting.manage",
-],
-    "Ketua Yayasan": [
+        # =====================================================
+        # USER
+        # =====================================================
+        "user.view",
+        "user.create",
+        "user.update",
+        "user.delete",
+        # =====================================================
+        # ROLE
+        # =====================================================
+        "role.view",
+        "role.create",
+        "role.update",
+        "role.delete",
+        # =====================================================
+        # UNIT
+        # =====================================================
+        "unit.view",
+        "unit.create",
+        "unit.update",
+        "unit.delete",
+        # =====================================================
+        # PARTNER
+        # =====================================================
+        "partner.view",
+        "partner.create",
+        "partner.update",
+        "partner.delete",
+        # =====================================================
+        # KATEGORI BELANJA
+        # =====================================================
+        "category.view",
+        "category.create",
+        "category.update",
+        "category.delete",
+        # =====================================================
+        # TAHUN PELAJARAN
+        # =====================================================
+        "academic_year.view",
+        "academic_year.create",
+        "academic_year.update",
+        "academic_year.delete",
+        # =====================================================
+        # SUMBER DANA
+        # =====================================================
+        "fund_source.view",
+        "fund_source.create",
+        "fund_source.update",
+        "fund_source.delete",
+        # =====================================================
+        # POS DANA
+        # =====================================================
+        "fund_position.view",
+        "fund_position.create",
+        "fund_position.update",
+        "fund_position.delete",
+        # =====================================================
+        # PROPOSAL BELANJA
+        # =====================================================
+        "proposal.view",
+        "proposal.create",
+        "proposal.update",
         "proposal.approve",
-        "payment.approve",
-        "report.view",
-    ],
-    "Bendahara": [
+        # =====================================================
+        # PEMBAYARAN
+        # =====================================================
+        "payment.view",
         "payment.create",
+        "payment.approve",
+        # =====================================================
+        # LAPORAN
+        # =====================================================
         "report.view",
-    ],
-    "Kepala Sekolah": [
-        "proposal.create",
-        "report.view",
-    ],
-    "Operator": [
-        "proposal.create",
+        # =====================================================
+        # PENGATURAN
+        # =====================================================
+        "setting.manage",
     ],
 }
-
 
 def seed_role_permissions():
 

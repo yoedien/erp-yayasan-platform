@@ -1,17 +1,13 @@
-from sqlalchemy import (
-    Boolean,
-    ForeignKey,
-    Integer,
-    String,
-)
+from sqlalchemy import Boolean
+from sqlalchemy import ForeignKey
+from sqlalchemy import Integer
+from sqlalchemy import String
 
-from sqlalchemy.orm import (
-    Mapped,
-    mapped_column,
-    relationship,
-)
+from sqlalchemy.orm import Mapped
+from sqlalchemy.orm import mapped_column
+from sqlalchemy.orm import relationship
 
-from erp.database.base import Base
+from erp.models.base import Base
 
 
 class FundSource(Base):
@@ -46,7 +42,6 @@ class FundSource(Base):
 
     description: Mapped[str | None] = mapped_column(
         String(255),
-        nullable=True,
     )
 
     is_active: Mapped[bool] = mapped_column(
@@ -56,17 +51,10 @@ class FundSource(Base):
 
     academic_year = relationship(
         "AcademicYear",
-        back_populates="fund_sources",
     )
 
     unit = relationship(
         "Unit",
-    )
-
-    fund_positions = relationship(
-        "FundPosition",
-        back_populates="fund_source",
-        cascade="all, delete-orphan",
     )
 
     def __repr__(self):

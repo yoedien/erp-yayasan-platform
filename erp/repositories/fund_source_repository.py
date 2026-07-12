@@ -1,11 +1,13 @@
 from sqlalchemy import select
 
-from erp.models import AcademicYear
+from erp.models import FundSource
 
+from sqlalchemy.orm import joinedload
 
-class AcademicYearRepository:
+class FundSourceRepository:
 
     def __init__(self, session):
+
         self.session = session
 
     # ==========================================
@@ -14,7 +16,14 @@ class AcademicYearRepository:
 
     def get_all(self):
 
-        stmt = select(AcademicYear).order_by(AcademicYear.code.desc())
+        stmt = (
+            select(FundSource)
+            .options(
+                joinedload(FundSource.academic_year),
+                joinedload(FundSource.unit),
+            )
+            .order_by(FundSource.code)
+        )
 
         return list(self.session.scalars(stmt))
 
@@ -25,9 +34,9 @@ class AcademicYearRepository:
     def get_active(self):
 
         stmt = (
-            select(AcademicYear)
-            .where(AcademicYear.is_active == True)
-            .order_by(AcademicYear.code.desc())
+            select(FundSource)
+            .where(FundSource.is_active == True)
+            .order_by(FundSource.code)
         )
 
         return list(self.session.scalars(stmt))
@@ -36,20 +45,33 @@ class AcademicYearRepository:
     # GET BY ID
     # ==========================================
 
-    def get_by_id(self, academic_year_id):
+    def get_by_id(
+        self,
+        fund_source_id,
+    ):
 
         return self.session.get(
-            AcademicYear,
-            academic_year_id,
+            FundSource,
+            fund_source_id,
         )
 
     # ==========================================
     # GET BY CODE
     # ==========================================
 
-    def get_by_code(self, code):
+    def get_by_code(
+        self,
+        code,
+    ):
 
-        stmt = select(AcademicYear).where(AcademicYear.code == code)
+        stmt = (
+            select(FundSource)
+            .options(
+                joinedload(FundSource.academic_year),
+                joinedload(FundSource.unit),
+            )
+            .order_by(FundSource.code)
+        )
 
         return self.session.scalar(stmt)
 
@@ -57,12 +79,15 @@ class AcademicYearRepository:
     # SEARCH
     # ==========================================
 
-    def search(self, keyword):
+    def search(
+        self,
+        keyword,
+    ):
 
         stmt = (
-            select(AcademicYear)
-            .where(AcademicYear.name.ilike(f"%{keyword}%"))
-            .order_by(AcademicYear.code.desc())
+            select(FundSource)
+            .where(FundSource.name.ilike(f"%{keyword}%"))
+            .order_by(FundSource.code)
         )
 
         return list(self.session.scalars(stmt))
@@ -73,22 +98,15 @@ class AcademicYearRepository:
 
     def create(
         self,
-        code,
-        name,
-        start_date,
-        end_date,
-        is_active=True,
+        **kwargs,
     ):
 
-        obj = AcademicYear(
-            code=code,
-            name=name,
-            start_date=start_date,
-            end_date=end_date,
-            is_active=is_active,
+        obj = FundSource(
+            **kwargs,
         )
 
         self.session.add(obj)
+
         self.session.commit()
 
         return obj
@@ -97,9 +115,13 @@ class AcademicYearRepository:
     # UPDATE
     # ==========================================
 
-    def update(self, obj):
+    def update(
+        self,
+        obj,
+    ):
 
         self.session.add(obj)
+
         self.session.commit()
 
         return obj
@@ -108,13 +130,17 @@ class AcademicYearRepository:
     # DELETE
     # ==========================================
 
-    def delete(self, academic_year_id):
+    def delete(
+        self,
+        fund_source_id,
+    ):
 
-        obj = self.get_by_id(academic_year_id)
+        obj = self.get_by_id(fund_source_id)
 
         if obj:
 
             self.session.delete(obj)
+
             self.session.commit()
 
             return True

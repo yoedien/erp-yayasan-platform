@@ -20,6 +20,11 @@ class Permission:
     PARTNER_UPDATE = "partner.update"
     PARTNER_DELETE = "partner.delete"
 
+    ACADEMIC_YEAR_VIEW = "academic_year.view"
+    ACADEMIC_YEAR_CREATE = "academic_year.create"
+    ACADEMIC_YEAR_UPDATE = "academic_year.update"
+    ACADEMIC_YEAR_DELETE = "academic_year.delete"
+
     PROPOSAL_VIEW = "proposal.view"
     PROPOSAL_CREATE = "proposal.create"
     PROPOSAL_UPDATE = "proposal.update"

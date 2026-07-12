@@ -21,10 +21,13 @@ from erp.gui.pages.permission_page import PermissionPage
 from erp.gui.pages.role_permission_page import RolePermissionPage
 from erp.gui.pages.category_page import CategoryPage
 from erp.gui.pages.proposal_page import ProposalPage
+from erp.gui.pages.academic_year_page import AcademicYearPage
+from erp.gui.pages.fund_source_page import FundSourcePage
 
 class MainWindow(QMainWindow):
 
     def __init__(self, user):
+
         super().__init__()
 
         self.user = user
@@ -73,6 +76,11 @@ class MainWindow(QMainWindow):
             ["Role"],
         )
 
+        self.menu_permission = QTreeWidgetItem(
+            master,
+            ["Permission"],
+        )
+
         self.menu_role_permission = QTreeWidgetItem(
             master,
             ["Role Permission"],
@@ -88,14 +96,19 @@ class MainWindow(QMainWindow):
             ["Partner"],
         )
 
-        self.menu_permission = QTreeWidgetItem(
-            master,
-            ["Permission"],
-        )
-
         self.menu_category = QTreeWidgetItem(
             master,
             ["Kategori Belanja"],
+        )
+
+        self.menu_academic_year = QTreeWidgetItem(
+            master,
+            ["Tahun Pelajaran"],
+        )
+
+        self.menu_academic_year = QTreeWidgetItem(
+            master,
+            ["Sumber Dana"],
         )
 
         keuangan = QTreeWidgetItem(
@@ -159,6 +172,11 @@ class MainWindow(QMainWindow):
             "Permission": PermissionPage(),
             "Kategori Belanja": CategoryPage(),
             "Pengajuan Belanja": ProposalPage(),
+            "Tahun Pelajaran": AcademicYearPage(),
+            "Partner": PartnerPage(),
+            "Tahun Pelajaran": AcademicYearPage(),
+            "Sumber Dana": FundSourcePage(),
+            "Kategori Belanja": CategoryPage(),
         }
 
         for page in self.pages.values():
@@ -227,6 +245,11 @@ class MainWindow(QMainWindow):
             not self.can(
                 Permission.SETTING_MANAGE
             )
+        )
+
+        self.menu_academic_year.setHidden(
+            not self.can(
+                Permission.ACADEMIC_YEAR_VIEW)
         )
 
     def change_page(
